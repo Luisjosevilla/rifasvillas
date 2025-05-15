@@ -84,8 +84,8 @@ export async function POST( request:NextRequest) {
       
       const {  error:errorupdate } = await supabase
       .from('profile')
-      .update({ ntickets:[...new Set([...profile[0]?.ntickets, ...numbersRifa])]})
-      .eq('id',  profile[0]?.id )
+      .update({ ntickets:[...new Set([...profile[0].ntickets, ...numbersRifa])]})
+      .eq('id',  profile[0].id )
       .select();
     
         
@@ -98,8 +98,8 @@ export async function POST( request:NextRequest) {
       .select();
 
     if (payment){
-      for (let index = 0; index < payment[0]?.numbers?.length; index++) {
-        const element = payment[0]?.numbers[index];
+      for (let index = 0; index < payment[0].numbers?.length; index++) {
+        const element = payment[0].numbers[index];
         const { data:tickets, error } = await supabase
         .from('tickets')
         .update({ "status": 'no disponible' })
