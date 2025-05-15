@@ -6,27 +6,28 @@ import { encodedRedirect } from '@/utils/utils';
 import jwt from 'jsonwebtoken';
 
 export async function POST( request:NextRequest) {
-
-try {
-    const supabase = await createClient();
-const formData = await request.formData();
-
-const getNumbers= async (number:number,name:string)=>{
+ const supabase = await createClient();
+  const formData = await request.formData();
+  
+  const getNumbers= async (number:number,name:string)=>{
     const data= await fetch(`${process.env.URL}/api/numbers?count=${encodeURIComponent(number)}&name=${encodeURIComponent(name)}`,{method:"GET"})
     const datares= await data.json()
-    
-    const numbers= datares?.numbers.map((item:any)=>`${item.number}` )
+
+    const numbers= datares?.numbers?.map((item:any)=>`${item?.number}` )
   
     return numbers
-}
-let { data: settings, error } = await supabase
-.from('settings')
-.select("*")
-if(!settings) return NextResponse.json({msj:"Error servidor"},{status:500});
+  }
 
+  let { data: settings, error } = await supabase
+  .from('settings')
+  .select("*")
+  if(!settings) return NextResponse.json({msj:"Error servidor"},{status:500});
 
-if(!(Number(formData.get("number"))>=settings[0].ntickets)){
-      return NextResponse.json({msj:`Error número de tickets menor que ${settings[0].ntickets}`},{status:500})
+  try {
+   
+
+    if(!(Number(formData.get("number"))>=settings[0]?.ntickets)){
+      return NextResponse.json({msj:`Error número de tickets menor que ${settings[0]?.ntickets}`},{status:500})
     }
     if(!formData.get("transfer")){
       return NextResponse.json({msj:"Error numero de transferencia"},{status:500})
@@ -65,7 +66,7 @@ if(!(Number(formData.get("number"))>=settings[0].ntickets)){
      
       const response = await fetch(url, options);
       const data = await response.json();
-      if (!data) return NextResponse.json({msj:"Error servidor"},{status:500});
+      if (!data) return NextResponse.json({msj:"Error servidor fetch imagen"},{status:500});
     let { data: profile, error:errorprofile } = await supabase
     .from('profile')
     .select('*')
@@ -76,11 +77,15 @@ if(!(Number(formData.get("number"))>=settings[0].ntickets)){
       if(!profile){
         return  NextResponse.json({msj:"ha ocurrido un error al obtener perfil"},{status:500})
       }
+     
+      if(!(profile?.length>0)){
+        return  NextResponse.json({msj:"perfil vacio"},{status:500})
+      }
       
       const {  error:errorupdate } = await supabase
       .from('profile')
-      .update({ ntickets:[...new Set([...profile[0].ntickets, ...numbersRifa])]})
-      .eq('id',  profile[0].id )
+      .update({ ntickets:[...new Set([...profile[0]?.ntickets, ...numbersRifa])]})
+      .eq('id',  profile[0]?.id )
       .select();
     
         
@@ -93,7 +98,7 @@ if(!(Number(formData.get("number"))>=settings[0].ntickets)){
       .select();
 
     if (payment){
-      for (let index = 0; index < payment[0]?.numbers.length; index++) {
+      for (let index = 0; index < payment[0]?.numbers?.length; index++) {
         const element = payment[0]?.numbers[index];
         const { data:tickets, error } = await supabase
         .from('tickets')
@@ -115,6 +120,7 @@ if(!(Number(formData.get("number"))>=settings[0].ntickets)){
     }
 
 } catch (error) {
+  console.log(error)
     return NextResponse.json({msj:"Error servidor"},{status:500});
 }
 }

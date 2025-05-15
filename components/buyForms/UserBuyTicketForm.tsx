@@ -69,11 +69,11 @@ const UserBuyTicketsForm= ({searchParams,methods,userData,n}:{n:any,searchParams
     }
     const form = new FormData();
     form.append('monto', searchParams?.monto?.toString());
-    form.append('user', userData?.user_id);
+    form.append('user', userData?.user_id.toString());
     form.append('number', data.number!.toString());
     form.append('method', data.method!.toString());
-    form.append('name', userData?.name);
-    form.append('cedula',userData?.cedula); 
+    form.append('name', userData?.name.toString());
+    form.append('cedula',userData?.cedula.toString()); 
     form.append('phone', userData?.phone!.toString());
     form.append('transfer', data.transfer!.toString());
     form.append('file', file!);
@@ -85,6 +85,7 @@ const UserBuyTicketsForm= ({searchParams,methods,userData,n}:{n:any,searchParams
       method:"POST"})
       const res= await nextstep.json()
       if(nextstep.status !== 200){ 
+        setsender(e=>e=false)
         return  toast.error(res.msj??"Error, intente de nuevo")
       
       }
