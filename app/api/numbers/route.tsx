@@ -21,14 +21,20 @@ if( !count){
       let { data, error:errortickets } = await supabase
       .from('tickets')
       .select("*")
-      .range((Math.round(Math.random()*9))*1000, 9999)
       .eq('status', 'disponible')
       if( !data|| errortickets){
         const msj= errortickets
         return NextResponse.json({msj:`error en la consulta${msj}`},{status:500})
 
       }
+
+      const num = Math.round(Math.random()*data.length);
+      if(datanumber.includes(data[num])){
         datanumber.push(data[Math.round(Math.random()*data.length)])
+      }else{
+        datanumber.push(data[num])
+      }
+        
     }
  
     
