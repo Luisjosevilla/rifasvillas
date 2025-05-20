@@ -13,7 +13,7 @@ export default async function ForgotPassword(props: {
   return (
     <>
       <form className="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-64 max-w-64 mx-auto">
-        <div>
+        {/*<div>
           <h1 className="text-2xl font-medium">Restablecer contraseña</h1>
           <p className="text-sm text-secondary-foreground">
             Ya tienes una cuenta?{" "}
@@ -29,7 +29,7 @@ export default async function ForgotPassword(props: {
             Restablecer
           </SubmitButton>
           <FormMessage message={searchParams} />
-        </div>
+        </div>*/}
       </form>
     </>
   );
