@@ -19,7 +19,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           <Label htmlFor="password">Contraseña</Label>
           <Link
             className="text-xs text-foreground underline"
-            href="/sign-in"
+            href="/forgot-password"
           >
             No recuerda su contraseña?
           </Link>

@@ -67,8 +67,8 @@ export default async function AuthButton() {
               <Link  className="hover:opacity-70 text-lg font-bold flex flex-row justify-between" href={`/protected/dashboard/admin/config`}><span className="flex flex-row gap-2" ><Settings/>Ajustes</span><span><ChevronRight/></span></Link>
               <Link  className="hover:opacity-70 text-lg font-bold flex flex-row justify-between" href={`/protected/dashboard/admin/top`}><span className="flex flex-row gap-2" ><CircleDollarSign/>Top compradores</span><span><ChevronRight/></span></Link>
               <Link  className="hover:opacity-70 text-lg font-bold flex flex-row justify-between" href={`/protected/dashboard/admin/ganador`}><span className="flex flex-row gap-2" ><Trophy/>Ganador</span><span><ChevronRight/></span></Link>
-              {/*<Link  className="hover:opacity-70 text-lg font-bold flex flex-row justify-between" href={`/protected/dashboard/admin/datausers`}><span className="flex flex-row gap-2" ><UserCheckIcon/>Datos de usuario</span><span><ChevronRight/></span></Link>
-             */}
+              <Link  className="hover:opacity-70 text-lg font-bold flex flex-row justify-between" href={`/protected/dashboard/admin/datausers`}><span className="flex flex-row gap-2" ><UserCheckIcon/>Editar usuarios</span><span><ChevronRight/></span></Link>
+             
               </div>
               :
               <div className="basis-3/4 flex flex-col gap-4">
