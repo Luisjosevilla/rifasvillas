@@ -26,31 +26,9 @@ import { createClient } from "@/utils/supabase/server";
 
 
 export default async function Home() {
-  //  const supabase = await createClient();
-  // let { data: profile, error } = await supabase
-  // .from('payments')
-  // .select("*")
-  //   if(profile){
-  //     for (let index = 0; index < profile!.length; index++) {
-  //       const element = profile[index];
-
-  //       for (let index = 0; index < element.numbers.length; index++) {
-  //         const elem = element!.numbers[index];
-  //         const { data:tickets, error } = await supabase
-  //         .from('tickets')
-  //         .update({ "status": 'no disponible' })
-  //         .eq('number', elem)
-  //         .select();
-          
-  //         const { data:ticketsIdpay, error:te } = await supabase
-  //         .from('tickets')
-  //         .update({ "payid":element?.id })
-  //         .eq('number', elem)
-  //         .select();
-  //       }
+  
         
-  //     }
-  //   }
+  
       
   return (
     <>

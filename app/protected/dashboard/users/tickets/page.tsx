@@ -29,7 +29,7 @@ const supabase = await createClient();
 
     const startIndex = "page" in queryParams && queryParams?.page ? (Number(queryParams?.page) * 10): 0;
     const endIndex = startIndex + 10;
-    const paginatedData = data?.slice(startIndex, endIndex);
+    const paginatedData = data?.slice(startIndex, endIndex) ?? [];
   return (
     <section className='flex flex-col gap-6 w-full p-10'>
     <h1 className='px-28  font-bold text-4xl text-slate-700'>Pagos</h1>
@@ -68,16 +68,16 @@ const supabase = await createClient();
               <Pagination>
                   <PaginationContent>
                     <PaginationItem>
-                      <PaginationPrevious href={`/protected/dashboard/admin/pagos?page=${Number(queryParams?.page)>=1 ? Number(queryParams?.page)-1 : 0}` }/>
+                      <PaginationPrevious href={`/protected/dashboard/users/tickets?page=${Number(queryParams?.page)>=1 ? Number(queryParams?.page)-1 : 0}` }/>
                     </PaginationItem>
                     <PaginationItem>
-                      <PaginationLink href={"/protected/dashboard/admin/pagos?page="+queryParams?.page}>{queryParams?.page}</PaginationLink>
+                      <PaginationLink href={"/protected/dashboard/users/tickets?page="+queryParams?.page}>{queryParams?.page}</PaginationLink>
                     </PaginationItem>
                     <PaginationItem>
                       <PaginationEllipsis />
                     </PaginationItem>
                     <PaginationItem>
-                      <PaginationNext href={`/protected/dashboard/admin/pagos?page=${Number(queryParams?.page)>=1 ? Number(queryParams?.page)+1 : 0}` } />
+                      <PaginationNext href={`/protected/dashboard/users/tickets?page=${Number(queryParams?.page)>=0 ? paginatedData!.length>=10? Number(queryParams?.page)+1:Number(queryParams?.page):1}` } />
                     </PaginationItem>
                   </PaginationContent>
                 </Pagination>
