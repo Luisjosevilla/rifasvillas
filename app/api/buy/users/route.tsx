@@ -35,16 +35,16 @@ export async function POST( request:NextRequest) {
     if(!formData.get("transfer")){
       return NextResponse.json({msj:"Error numero de transferencia"},{status:500})
     }
-    if(!filecap){
-     return NextResponse.json({msj:"Error archivos"},{status:500})
-    }
+    // if(!filecap){
+    //  return NextResponse.json({msj:"Error archivos"},{status:500})
+    // }
     if(!formData.get("terms")){
       return NextResponse.json({msj:"Error Aceptar terminos"},{status:500})
     }
    
     const url = 'https://upload.imagekit.io/api/v2/files/upload';
     const form = new FormData();
-    form.append('file', filecap);
+    form.append('file', filecap!);
     const filename= `capture${Math.round(Math.random()*1000000)}.jpg`;
   
   
@@ -100,7 +100,7 @@ export async function POST( request:NextRequest) {
       const { data:payment, error:errorpayments } = await supabase
       .from('payments')
       .insert([
-        { user:  formData.get("user") , numbers:numbersRifa, capture:data?.url??"/", trans_number: formData.get("transfer") , pay_method: formData.get("method") ,status:false,monto: formData.get("monto")  },
+        { user:  formData.get("user") , numbers:numbersRifa, capture:data?.url??"https://img.freepik.com/free-vector/modern-simple-designer-invoice_23-2149020592.jpg", trans_number: formData.get("transfer") , pay_method: formData.get("method") ,status:false,monto: formData.get("monto")  },
       ])
       .select();
       console.log(formData.values(), errorpayments)

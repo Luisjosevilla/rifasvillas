@@ -22,9 +22,9 @@ if(!(Number(formData.get("number"))>=settings[0].ntickets)){
     if(!formData.get("transfer")){
       return NextResponse.json({msj:"Error numero de transferencia"},{status:500})
     }
-    if(!formData.get("file")){
-     return NextResponse.json({msj:"Error archivos"},{status:500})
-    }
+    // if(!formData.get("file")){
+    //  return NextResponse.json({msj:"Error archivos"},{status:500})
+    // }
     if(!formData.get("terms")){
       return NextResponse.json({msj:"Error Aceptar terminos"},{status:500})
     }
