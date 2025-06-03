@@ -102,15 +102,10 @@ export async function POST( request:NextRequest) {
         const element = payment[0].numbers[index];
         const { data:tickets, error } = await supabase
         .from('tickets')
-        .update({ "status": 'no disponible' })
+        .update({ "status": 'no disponible', "payid":payment[0]?.id })
         .eq('number', element)
         .select();
         
-        const { data:ticketsIdpay, error:te } = await supabase
-        .from('tickets')
-        .update({ "payid":payment[0]?.id })
-        .eq('number', element)
-        .select();
 
         if(error){
             return NextResponse.json({msj:"ha ocurrido un error al guardar los tickets"},{status:500})

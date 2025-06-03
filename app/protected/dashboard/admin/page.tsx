@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic'
 
 async function Page() {
       
+  const supabase = await createClient();
     const getData = await fetch(`${process.env.URL}/api/admin/getData`,{method:"GET"})
       const data = await  getData?.json()
 
@@ -21,6 +22,7 @@ async function Page() {
   return (
     <section className='flex flex-col gap-6 w-full'>
        <h1 className='px-28  font-bold text-4xl text-slate-700'>Inicio</h1>
+
      
         <div className='flex flex-col md:flex-row gap-4 w-full items-center justify-center '>
         <Card className="w-full md:basis-1/4">
@@ -30,6 +32,7 @@ async function Page() {
           </CardHeader>
           <CardContent>
             <span className='text-3xl font-bold text-primary '>{data?.users}</span>
+
           </CardContent>
          
         </Card>
