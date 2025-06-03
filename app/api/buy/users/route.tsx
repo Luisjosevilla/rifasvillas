@@ -22,9 +22,12 @@ export async function POST( request:NextRequest) {
   .from('settings')
   .select("*")
   if(!settings) return NextResponse.json({msj:"Error servidor"},{status:500});
-
+  const filecap=formData.get("file")
   try {
-   
+    if(!process.env.PRIVATE_KEY || !process.env.NEXT_PUBLIC_PUBLIC_KEY){
+      return NextResponse.json({msj:`Error token`},{status:500})
+ 
+    }
 
     if(!(Number(formData.get("number"))>=settings[0]?.ntickets)){
       return NextResponse.json({msj:`Error número de tickets menor que ${settings[0]?.ntickets}`},{status:500})
@@ -32,7 +35,7 @@ export async function POST( request:NextRequest) {
     if(!formData.get("transfer")){
       return NextResponse.json({msj:"Error numero de transferencia"},{status:500})
     }
-    if(!formData.get("file")){
+    if(!filecap){
      return NextResponse.json({msj:"Error archivos"},{status:500})
     }
     if(!formData.get("terms")){
@@ -41,18 +44,18 @@ export async function POST( request:NextRequest) {
    
     const url = 'https://upload.imagekit.io/api/v2/files/upload';
     const form = new FormData();
-    form.append('file', formData.get("file")!);
+    form.append('file', filecap);
     const filename= `capture${Math.round(Math.random()*1000000)}.jpg`;
   
   
     const token = jwt.sign({
       fileName: filename
-    }, process.env.PRIVATE_KEY!, {
+    }, process.env.PRIVATE_KEY, {
       expiresIn: 600,
       header: {
         alg: "HS256",
         typ: "JWT",
-        kid: process.env.NEXT_PUBLIC_PUBLIC_KEY!,
+        kid: process.env.NEXT_PUBLIC_PUBLIC_KEY,
       },
     });
     form.append("fileName", filename);
@@ -64,9 +67,10 @@ export async function POST( request:NextRequest) {
     };
   
      
-      const response = await fetch(url, options);
-      const data = await response.json();
-      if (!data) return NextResponse.json({msj:"Error servidor fetch imagen"},{status:500});
+    const response = await fetch(url, options);
+    const data = await response.json();
+ 
+   
     let { data: profile, error:errorprofile } = await supabase
     .from('profile')
     .select('*')
@@ -87,15 +91,23 @@ export async function POST( request:NextRequest) {
       .update({ ntickets:[...new Set([...profile[0].ntickets, ...numbersRifa])]})
       .eq('id',  profile[0].id )
       .select();
-    
+
+      if(errorupdate){
+        return  NextResponse.json({msj:"Error al actualizar perfil"},{status:500})
+      }
         
 
       const { data:payment, error:errorpayments } = await supabase
       .from('payments')
       .insert([
-        { user:  formData.get("user") , numbers:numbersRifa, capture:data?.url, trans_number: formData.get("transfer") , pay_method: formData.get("method") ,status:false,monto: formData.get("monto")  },
+        { user:  formData.get("user") , numbers:numbersRifa, capture:data?.url??"/", trans_number: formData.get("transfer") , pay_method: formData.get("method") ,status:false,monto: formData.get("monto")  },
       ])
       .select();
+      console.log(formData.values(), errorpayments)
+
+      if(errorpayments){
+        return  NextResponse.json({msj:"Error pago"},{status:500})
+      }
 
     if (payment){
       for (let index = 0; index < payment[0].numbers?.length; index++) {
