@@ -5,7 +5,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
 import Image from 'next/image';
-import moto1 from "../../../public/moto1.jpg"
+import moto1 from "../../../public/fotonueva.jpeg"
 import AnimateButton from '../../../../components/Animate-button';
 
 async function Page() {
