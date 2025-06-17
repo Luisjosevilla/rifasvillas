@@ -59,7 +59,7 @@ export default async function Signup(props: {
             </thead>
             <tbody>
               <tr>
-                <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.price}$</td>
+                <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.price*(await getprice())?.tasa}Bs</td>
                 <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.tasa}Bs.</td>
                 <td className="border-l-2 border-primary/60 text-center p-4">{(await getprice())?.monto}$</td>
               </tr>

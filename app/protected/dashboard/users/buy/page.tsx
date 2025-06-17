@@ -14,15 +14,22 @@ async function Page(props: {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const getprice=async ()=>{
+   const getprice=async ()=>{
+    try{
       const getTasa= await fetch("https://ve.dolarapi.com/v1/dolares/paralelo",{method:"GET"})
       const resTasa= await getTasa?.json()
+      const supabase = await createClient();
       let { data: settings, error } = await supabase
       .from('settings')
       .select("*")
       if(!settings) return null;
-      return {price: settings[0].price, tasa:resTasa.promedio+1,monto:1 }
+      return {price: settings[0].price, tasa:settings[0].d_paralelo?resTasa.promedio:settings[0].dolar,monto:settings[0].ntickets }
           
+    }catch(err){
+      return {price: "", tasa:"",monto:""}
+    }
+   
+        
   }
 
   let { data: methods, error:errormethod } = await supabase
@@ -53,7 +60,7 @@ async function Page(props: {
             </thead>
             <tbody>
               <tr>
-                <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.price}$</td>
+                <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.price*(await getprice())?.tasa}Bs</td>
                 <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.tasa}Bs.</td>
                 <td className="border-l-2 border-primary/60 text-center p-4">{(await getprice())?.monto}$</td>
               </tr>
