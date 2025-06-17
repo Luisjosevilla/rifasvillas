@@ -62,7 +62,7 @@ async function Page(props: {
               <tr>
                 <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.price*(await getprice())?.tasa}Bs</td>
                 <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.tasa}Bs.</td>
-                <td className="border-l-2 border-primary/60 text-center p-4">{(await getprice())?.monto}$</td>
+                <td className="border-l-2 border-primary/60 text-center p-4 max-w-[100px]">Apartir de {(await getprice())?.monto/(await getprice())?.price} tickets</td>
               </tr>
               
             </tbody>
