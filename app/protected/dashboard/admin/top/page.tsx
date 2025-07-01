@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import ModalContact from '@/components/ModalContact';
-import { arr } from '@/app/actions';
+import { agregarticketErr, arr } from '@/app/actions';
 import { SubmitButton } from '@/components/submit-button';
 
 export const dynamic = 'force-dynamic';
@@ -57,14 +57,12 @@ async function Page({
              return {name:"",phone:""}
             }
   
-            return {name:profile[0].name,phone:profile[0].phone}
+            return {name:profile[0]?.name,phone:profile[0]?.phone}
       }
   return (
     <section className='flex flex-col gap-6 w-full p-2 md:p-10'>
     <h1 className='px-4 font-bold text-2xl md:text-4xl text-primary'>Top 10 de Compradores</h1>
-      <form action={arr}>
-        <SubmitButton  type='submit' pendingText='Revalidando...' >Revalidar</SubmitButton>
-       </form>
+      
        
     <Table >
             <TableCaption>

@@ -316,31 +316,115 @@ export const CancelarPago= async (formData:FormData) => {
 
 
 export const arr=async()=>{
+  interface Profile {
+  user_id: string;
+  ntickets: number[]; // Ajusta según tu estructura real
+  // Otros campos...
+}
   const supabase = await createClient();
-        let { data: payments, error } = await supabase
-        .from('payments')
-        .select("*")
+  let offset = 0;
+  const pageSize = 1000; // Tamaño máximo permitido por Supabase
+  let hasMore = true;
+  const processBatch = async (payments:any) => {
+  if (payments.length === 0) return;
 
-        payments?.forEach(async (data)=>{
-          
-              let { data: profileD } = await supabase
-              .from('profile')
-              .select("*")
-              .eq('user_id', data?.user)
+  // Obtener todos los user_id del lote actual
+  const userIds:string[] = [...new Set<string>(payments.map((p:{id:string,created_at:string,user:string,numbers:string,capture:string,trans_number:string,pay_method:string,status:string,monto:number}) => p.user))];
+  console.log(userIds)
 
-              if(!profileD){
-                return console.log("error");
-              }
-            const { data:profileU, error } = await supabase
+      // Obtener todos los perfiles en una sola consulta
+      const profiles=await Promise.all(
+         userIds.map(async (data:string) => {
+           const { data: profile, error } = await supabase
             .from('profile')
-            .update({ "ntickets": [...new Set([...data?.numbers,...profileD[0].ntickets])] })
-            .eq('user_id', data?.user)
-            .select()
-        
+            .select('user_id, ntickets')
+            .eq("user_id",data)
+            if (profile==null) return null;
+            return profile[0]
         })
+      );
 
-      redirect(`/protected/dashboard/admin/top?update=${Math.round(Math.random()*100000)}`)
+      if (!profiles ||( profiles&& profiles.length < 1)) {
+        console.error('Error al obtener perfiles:');
+        return;
+      }
 
+      // Mapear perfiles por user_id para acceso rápido
+      const profileMap = profiles.reduce<Record<string, Profile>>((acc, profile) => {
+        if (profile==null) return acc;
+        acc[profile.user_id] = profile; // Ahora TypeScript sabe que acc es un mapa de string -> Profile
+        return acc;
+      }, {}); 
+
+      // Actualizar perfiles en paralelo (sin bloquear el bucle)
+      await Promise.all(
+        payments.map(async (data:{id:string,created_at:string,user:string,numbers:string,capture:string,trans_number:string,pay_method:string,status:string,monto:number}) => {
+          const profile = profileMap[data.user];
+          if (!profile) return;
+
+          // Actualizar ntickets
+          const updatedTickets = [...new Set([...data.numbers, ...profile.ntickets])];
+          
+          const { error: updateError } = await supabase
+            .from('profile')
+            .update({ ntickets: updatedTickets })
+            .eq('user_id', data.user);
+
+          if (updateError) {
+            console.error(`Error actualizando perfil ${data.user}:`, updateError);
+          }
+        })
+      );
+    };
+
+  while (hasMore) {
+    // Obtener un lote de registros
+    const { data: payments, error } = await supabase
+      .from('payments')
+      .select('*')
+      .eq("status",true)
+      .range(offset, offset + pageSize - 1); // Rango [offset, offset+999]
+
+    if (error) {
+      console.error('Error al obtener pagos:', error);
+      break;
+    }
+
+    // Verificar si hay más registros
+    if (payments.length < pageSize) hasMore = false;
+
+    // Procesar el lote actual (ver sección de optimización)
+    await processBatch(payments);
+
+    offset += pageSize;
+  }
+
+  redirect(`/protected/dashboard/admin/top?updated=${Math.round(Math.random() * 100000)}`);
 }
 
 
+export const agregarticketErr=async ()=>{
+  const supabase = await createClient();
+
+      
+const { data:payment, error:err } = await supabase
+  .from('payments')
+  .select("numbers")
+  .eq('user', "7fa77adb-1da5-4863-9a80-280bc4a03623")
+ 
+  if(!payment)return console.log("err")
+  const total=payment.map((item)=>{
+  return item.numbers
+  })
+  console.log(total)
+
+  const { data:profileupdate, error:er } = await supabase
+  .from('profile')
+  .update({ "ntickets": total.flat() })
+  .eq('user_id', '7fa77adb-1da5-4863-9a80-280bc4a03623')
+  .select()
+          
+   console.log("err",er)
+
+
+}

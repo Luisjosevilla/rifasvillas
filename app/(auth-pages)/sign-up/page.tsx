@@ -48,28 +48,7 @@ export default async function Signup(props: {
       <div className="flex flex-col gap-2 w-full h-fit md:w-1/2">
       <h2 className="text-3xl text-primary font-bold opacity-90 text-center  animate pulse"> PARTICIPA Y GANA!</h2>
         <span className="text-xs text-center">Los números son otorgados de forma totalmente  aleatoria previa confirmación del pago, recuerda que si te sale alguno de los siguientes numeros: 7777, 3333 y 8888. Obtendras un premio que será entregado de manera inmediata al ganador. MUCHA SUERTE!</span>
-      
-         <table className="table-auto gap-2 ">
-            <thead className="">
-              <tr className="border-2 border-b-primary/60  border-transparent rounded-xl">
-                <th className="border-r-2 border-primary/60 text-center max-w-[100px] p-2 text-foregound-primary">Precio por ticket</th>
-                <th className="border-r-2 border-primary/60 text-center max-w-[100px] p-2 text-foregound-primary">Tasa del dia</th>
-                <th className="border-l-2 border-primary/60 text-center max-w-[100px] p-2 text-foregound-primary">Compra mínima</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.price*(await getprice())?.tasa}Bs</td>
-                <td className="border-r-2 border-primary/60 text-center p-4">{(await getprice())?.tasa}Bs.</td>
-                <td className="border-l-2 border-primary/60 text-center p-4">Apartir de {(await getprice())?.monto/(await getprice())?.price} tickets</td>
-              </tr>
-              
-            </tbody>
-          </table>
-      {searchParams.step =="register"&&(Number(searchParams.number)>=(((await getprice())?.monto??0)/(await getprice())?.price)) && searchParams.method != undefined?
-      <RegisterPay searchParams={searchParams}/>:
-      <SeeMonto searchParams={searchParams} n={(((await getprice())?.monto??0)/(await getprice())?.price)} methods={methods} />
-      }
+      <span>no se puede comprar</span>
       </div>
       
       
